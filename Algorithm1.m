@@ -1,8 +1,8 @@
 %% really messy code copy-pasted from different functions to provide to salman
 % So sorry Salman - Mira Liu 1/27/2025
 % runs in Matlab R2022b
-
-
+function Output = Algorithm1(bvalues,Signal)
+%{
 %% assumes given a volume of nx by ny by b-value 
 for i=1:nx
     for j=1:ny
@@ -14,24 +14,42 @@ for i=1:nx
         if( ImageStack(1,i,j) > 100 ) 
             Signal = double(ImageStack(1:N_Bvalues,i,j)); 
             %scatter(Bvalues, Signal/Signal(1))
-           
-            [f_meas, Dstar_meas, D_meas, Residual, IFLAG]  =                    ...
-                                    IVIM_UC_LM_Fit_2step(Signal,Bvalues );
-                   
-            if( (D_meas > 0 ) && (D_meas < .01 ) )
-               %fprintf(string(i)+', ' + string(j)+'\n')
-               D(i,j)     = D_meas;
-               Dstar(i,j) = Dstar_meas;
-               f(i,j)     = f_meas;
-               RSSE(i,j)  = Residual;
-            else
-               D(i,j)     = 0.;
-               Dstar(i,j) = 0.;
-               f(i,j)     = 0.;
-               RSSE(i,j)  = Residual;
-            end
-        end
+%}
+    Signal = Signal(:);
+    bvalues = bvalues(:);
+    [f_meas, Dstar_meas, D_meas, Residual, ~]  = IVIM_UC_LM_Fit_2step(Signal,bvalues);
+
+    Output.D=D_meas;
+    Output.Dstar=Dstar_meas;
+    Output.f = f_meas;
+    Output.RSSE = Residual;
+    %{
+    if( (D_meas > 0 ) && (D_meas < .01 ) )
+        Output.D=D_meas;
+        Output.Dstar=Dstar_meas;
+        Output.f = f_meas;
+        Output.RSSE = Residual;
+        %{
+       %fprintf(string(i)+', ' + string(j)+'\n')
+       D(i,j)     = D_meas;
+       Dstar(i,j) = Dstar_meas;
+       f(i,j)     = f_meas;
+       RSSE(i,j)  = Residual;
+        %}
+        
+    else
+        Output.D=0;
+        Output.Dstar=0;
+        Output.f = 0;
+        Output.RSSE = Residual;
+        %{
+       D(i,j)     = 0.;
+       Dstar(i,j) = 0.;
+       f(i,j)     = 0.;
+       RSSE(i,j)  = Residual;
+        %}
     end
+    %}
 end
 
 
