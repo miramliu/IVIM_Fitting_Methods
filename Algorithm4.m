@@ -7,7 +7,7 @@
 % data = signal + 15*randn(size(b));
 % [MMSE,MAP,curveFit,logPr,logLh,logPost] = IVIMBayesianEstimation(b,data);
 
-function MMSE = IVIMBayesianEstimation_simulation(b,data,organ,patientID,display,weight)
+function Output = Algorithm4(b,data)
 
 % make sure they are column arrays
 b = double(b(:));
@@ -18,21 +18,9 @@ sumData2 = sum(data.^2);
 
 % array of weights in case the NSA at different b-values are different
 % weight(i) = NSA for data(i)
-if nargin<=5
-    weight = ones(size(data));
-end
-if nargin<=4
-    %display = 1;
-    display = 0;
-end
-if nargin<=3
-    patientID = 0;
-end
-if nargin<=2
-    %organ = 'liver';
-    %organ = 'brain'; %%??
-    organ = 'kidney';
-end
+weight = ones(size(data));
+organ = 'kidney';
+
 
 weight = weight(:);
 
@@ -42,7 +30,7 @@ p = polyfit(b, ln_S, 1);
 ADC = -(p(1));
 % range for the parameters
 logDgrid = 120; logD = linspace(-10,-4,logDgrid);
-logDsgrid = 120; logDs = linspace(-100,0,logDsgrid); % adjusted Ds to be larger range?
+logDsgrid = 120; logDs = linspace(-12,0,logDsgrid); % adjusted Ds to be larger range?
 fGrid = 60; f = linspace(0,1,fGrid);
 
 % log-priors
@@ -86,11 +74,12 @@ sP = sum(Post(:));
 
 
 % compute MMSE estimates
-MMSE.D = exp(sum(sum(sum(Post,1),3).*logD)/sP);
+Output.D = exp(sum(sum(sum(Post,1),3).*logD)/sP);
 %MMSE.Dva = exp(sum(sum(sum(Post,1),3).*(logD-MMSE.D).^2)/sP);
-MMSE.Ds = exp(sum(squeeze(sum(sum(Post,1),2)).*logDs')/sP);
-MMSE.f = sum(sum(sum(Post,2),3).*f')/sP;
-IVIM_data=[MMSE.D,MMSE.f, MMSE.Ds, ADC];
+Output.Ds = exp(sum(squeeze(sum(sum(Post,1),2)).*logDs')/sP);
+Output.f = sum(sum(sum(Post,2),3).*f')/sP;
+%{
+%IVIM_data=[Output.D,Output.f, Output.Ds, ADC];
 % find MAP estimate (this will be close the the LS estimate)
 [~,I] = max(max(max(Post,[],3)));
 MAP.D = exp(logD(I));
@@ -98,9 +87,10 @@ MAP.D = exp(logD(I));
 MAP.Ds = exp(logDs(I));
 [~,I] = max(max(max(Post,[],2),[],3));
 MAP.f = f(I);
+%}
 
 % compute curve for MMSE estimate
-G = MMSE.f*exp(-b*MMSE.Ds) + (1-MMSE.f)*exp(-b*MMSE.D);
+G = Output.f*exp(-b*Output.Ds) + (1-Output.f)*exp(-b*Output.D);
 curveFit = G*inv(G'*G)*G'*data;
 curveFit1 = curveFit/max(curveFit(:));
 data=data/max(data(:));
@@ -111,28 +101,6 @@ SSresid = sum(yresid.^2);
 SStotal = (length(data)-1) * var(data);
 rsq = 1 - SSresid/SStotal;
 
-if display==1
-%if 1 == 1; %hardcoding to show
-    % display the curve and the marginal posterior distribution
-    g1=figure(1);
-    pos = get(g1,'position');
-%     set(gcf,'name',sprintf('Patient id #%d',patientID));
-    set(g1,'position',[pos(1:2) 605  806])
-    title(char(patientID));
-    subplot(3,1,1); plot(b,data,'o',b,curveFit1,'r'); xlabel('b'); ylabel('Signal')
-    subplot(3,2,3); plot(logD,sum(sum(Post,1),3)); xlabel('log D'); ylabel('pdf')
-    subplot(3,2,4); plot(logDs,squeeze(sum(sum(Post,1),2))); xlabel('log D*'); ylabel('pdf')
-    subplot(3,2,5); plot(f,sum(sum(Post,2),3)); xlabel('f'); ylabel('pdf')
-    subplot(3,2,6); contour(logDs,logD,squeeze(sum(Post,1)),100); xlabel('log D*'); ylabel('log D'); title('joint pdf')
-    %savefig(g1,['/Users/octaviabane/Dropbox/MATLAB/RenalTx/RenalTX_IVIM/' patientID '.fig'], 'compact');
-%     savefig(['/Users/octaviabane/Dropbox/MATLAB/Diffusion/RenalTX_IVIM/' char(patientID) '.fig'], 'compact');
-     
-                  
-    g2=figure(2); 
-    plot(b, data1, 'o', b, curveFit, 'r'); xlabel('bval'); ylabel('Signal');
-    %savefig(g2,['/Users/octaviabane/Dropbox/MATLAB/RenalTx/RenalTX_IVIM/' patientID '_full_signal.fig'], 'compact');
+Output.Residual=rsq;
 
-%     savefig([char(patientID) '_full_signal.fig']);
-    pause();
-
-end    
+end
