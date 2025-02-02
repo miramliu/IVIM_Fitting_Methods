@@ -64,7 +64,7 @@ f_best     = 0.05;
 Dstar_best = 0.009;
 D_best     = 0.0009;
 
-[n, N_Bvalues] = size(Bvalues);
+N_Bvalues = length(Bvalues);
 B_500 = 6; %for salman data, cutoff of 250
 
 Bvalues(B_500:N_Bvalues);
@@ -78,7 +78,7 @@ if( IVIM(1) == 0 )
     return
 end
 
-[f0 G0 ] = fit(Bvalues(B_500:N_Bvalues)', (IVIM(B_500:N_Bvalues)./IVIM(1))  , ...   
+[f0 G0 ] = fit(Bvalues(B_500:N_Bvalues), (IVIM(B_500:N_Bvalues)./IVIM(1))  , ...   
                           '(1-f)*exp(-x*D)'                                    , ... % (1-f)e^-bD (diffusion, high b values)
                           'Startpoint', [f_best, D_best]                     , ... % (1-f) and D best fits
                           'Lower'     , [0.0 0.0]                          , ... 
@@ -90,7 +90,7 @@ end
 
 %       fprintf('SSE %f D input %f D_fit %f \n', G0.sse, D_best, f0.D);
        IFLAG = 1;
-       [f0 G0 ] = fit(Bvalues(B_500:N_Bvalues)', (IVIM(B_500:N_Bvalues)./IVIM(1)) , ...
+       [f0 G0 ] = fit(Bvalues(B_500:N_Bvalues), (IVIM(B_500:N_Bvalues)./IVIM(1)) , ...
                           '(1-f)*exp(-x*D)'                                    , ... %(1-f)e^-bD
                           'Startpoint', [f0.f f0.D]                    , ... % (1-f) and D
                           'Lower'     , [0.0 0.0]                          , ...
@@ -102,8 +102,8 @@ end
 %----------------------------------------------------------------------%
 %  Now subtract and fit (two step!).   %
 %----------------------------------------------------------------------%                  
-IVIM2 = IVIM./IVIM(1)-((1-f0.f)*exp(-Bvalues.*f0.D))';
-[f1 G1] = fit(Bvalues(1:B_500-1)', (IVIM2(1:B_500-1))    , ...
+IVIM2 = IVIM./IVIM(1)-((1-f0.f)*exp(-Bvalues.*f0.D));
+[f1 G1] = fit(Bvalues(1:B_500-1), (IVIM2(1:B_500-1))    , ...
                           'f*exp(-x*Dstar)'                                        , ...
                           'Startpoint', [f_best Dstar_best]               , ...
                           'Lower', [0  0 ]                                , ...
