@@ -12,16 +12,17 @@ function Output = Algorithm3(bvalues,signal)
 
     %generate D map
     %[mono_fitresult, gof] = fit(b_D',vec',ft_mono);
-    [mono_fitresult, ~] = fit(bvalues(b_split:N_bvalues),vec(b_split:N_bvalues),'ax+b');
+    [mono_fitresult, ~] = fit(bvalues(b_split:N_bvalues),vec(b_split:N_bvalues),'poly1');
     D_fit = -mono_fitresult.p1;
     f0_fit = 1-exp(mono_fitresult.p2);
 
 
     %generate D* and f map
     ft_bi = fittype('(1-f0)*exp(-x*D)+f*exp(-x*(Dstar))','dependent',{'y'},'independent',{'x'},'problem',{'D','f0'},'coefficients',{'Dstar','f'});
-    fo_bi = [0.0004, 0.005, 0.07];
+    fo_bi = [0.005,0.07];
+
     try
-        [fitmod_bi,good_bi,~]=fit(bvalues,signal(:)/signal(1),ft_bi,fo_bi, 'problem', {D_fit f0_fit});
+        [fitmod_bi,good_bi,~]=fit(bvalues,signal(:)/signal(1),ft_bi,'startpoint',fo_bi, 'problem', {D_fit f0_fit});
         Output.D=D_fit;
         Output.Dstar=fitmod_bi.Dstar;
         Output.f = fitmod_bi.f; % note that while this does give f0, it also returns an f (?) 
