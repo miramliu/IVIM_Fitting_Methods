@@ -26,12 +26,16 @@ function Output = Algorithm3(bvalues,signal)
         Output.D=D_fit;
         Output.Dstar=fitmod_bi.Dstar;
         Output.f = fitmod_bi.f; % note that while this does give f0, it also returns an f (?) 
-        Output.RSSE = good_bi.adjrsquare;
+        Output.SSE = good_bi.sse;
+        Output.rsq = good_bi.rsq;
+        Output.adj_rsq = good_bi.adjrsquare;
     catch
         Output.D=0;
         Output.Dstar=0;
         Output.f = 0;
-        Output.RSSE = NaN;
+        Output.SSE = NaN;
+        Output.rsq = NaN;
+        Output.adj_rsq = NaN;
     end
 end
     %{

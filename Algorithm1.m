@@ -17,12 +17,14 @@ for i=1:nx
 %}
     Signal = double(Signal(:));
     bvalues = double(bvalues(:));
-    [f_meas, Dstar_meas, D_meas, Residual, ~]  = IVIM_UC_LM_Fit_2step(Signal,bvalues);
+    [f_meas, Dstar_meas, D_meas, SSE, rsq, adj_rsq]  = IVIM_UC_LM_Fit_2step(Signal,bvalues);
 
     Output.D=D_meas;
     Output.Dstar=Dstar_meas;
     Output.f = f_meas;
-    Output.RSSE = Residual;
+    Output.SSE = SSE;
+    Output.rsq = rsq;
+    Output.adj_rsq=adj_rsq;
     %{
     if( (D_meas > 0 ) && (D_meas < .01 ) )
         Output.D=D_meas;
@@ -54,7 +56,7 @@ end
 
 
 
-function [f_meas, Dstar_meas, D_meas, Residual, IFLAG] = IVIM_UC_LM_Fit_2step( IVIM, Bvalues)
+function [f_meas, Dstar_meas, D_meas, sse, rsq, adj_rsq] = IVIM_UC_LM_Fit_2step( IVIM, Bvalues)
 %-------------------------------------------------------------------------%
 % Fit a single Diffusion vs B-values curve optimized for IVIM modelling   %
 % %TWO STEP FIT %
@@ -78,19 +80,20 @@ if( IVIM(1) == 0 )
     return
 end
 
-[f0 G0 ] = fit(Bvalues(B_500:N_Bvalues), (IVIM(B_500:N_Bvalues)./IVIM(1))  , ...   
+[f0, G0 ] = fit(Bvalues(B_500:N_Bvalues), (IVIM(B_500:N_Bvalues)./IVIM(1))  , ...   
                           '(1-f)*exp(-x*D)'                                    , ... % (1-f)e^-bD (diffusion, high b values)
                           'Startpoint', [f_best, D_best]                     , ... % (1-f) and D best fits
                           'Lower'     , [0.0 0.0]                          , ... 
                           'MaxIter'   , 100                                , ...
                           'Upper'     , [0.04 1]                         , ...
                           'TolFun'    , 10e-30                             );
-   IFLAG = 0;
+   
+IFLAG = 0;
    if( G0.sse > 10e-08) %goodness of fit, sse is sum of squares due to error
 
 %       fprintf('SSE %f D input %f D_fit %f \n', G0.sse, D_best, f0.D);
        IFLAG = 1;
-       [f0 G0 ] = fit(Bvalues(B_500:N_Bvalues), (IVIM(B_500:N_Bvalues)./IVIM(1)) , ...
+       [f0, G0 ] = fit(Bvalues(B_500:N_Bvalues), (IVIM(B_500:N_Bvalues)./IVIM(1)) , ...
                           '(1-f)*exp(-x*D)'                                    , ... %(1-f)e^-bD
                           'Startpoint', [f0.f f0.D]                    , ... % (1-f) and D
                           'Lower'     , [0.0 0.0]                          , ...
@@ -103,7 +106,7 @@ end
 %  Now subtract and fit (two step!).   %
 %----------------------------------------------------------------------%                  
 IVIM2 = IVIM./IVIM(1)-((1-f0.f)*exp(-Bvalues.*f0.D));
-[f1 G1] = fit(Bvalues(1:B_500-1), (IVIM2(1:B_500-1))    , ...
+[f1, G1] = fit(Bvalues(1:B_500-1), (IVIM2(1:B_500-1))    , ...
                           'f*exp(-x*Dstar)'                                        , ...
                           'Startpoint', [f_best Dstar_best]               , ...
                           'Lower', [0  0 ]                                , ...
@@ -117,11 +120,9 @@ IVIM2 = IVIM./IVIM(1)-((1-f0.f)*exp(-Bvalues.*f0.D));
      f_meas     = f1.f;
      Dstar_meas = f1.Dstar;
      D_meas     = f0.D; 
-     SSE        = G1.sse;
+     sse        = G1.sse;
+     adj_rsq = G1.adjrsquare;
+     rsq = G1.rsq;
      
-    S_fit        = IVIM(1)*(f_meas*exp(-Dstar_meas*Bvalues)+              ...
-                         (1-f_meas)*exp(-D_meas*Bvalues));
-     Residual =  sum(sqrt(abs(IVIM'-S_fit)));     
-
      
 end

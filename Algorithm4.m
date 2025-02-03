@@ -13,7 +13,6 @@ function Output = Algorithm4(b,data)
 b = double(b(:));
 data = double(data(:));
 %class(data)
-data1=data(:);
 sumData2 = sum(data.^2);
 
 % array of weights in case the NSA at different b-values are different
@@ -91,7 +90,13 @@ SSresid = sum(yresid.^2);
 SStotal = (length(data)-1) * var(data);
 rsq = 1 - SSresid/SStotal;
 
-Output.Residual=rsq;
+k=3; %number of independent variables
+n=lenght(b); %number of datapoints
+adj_rsq = 1- ((1 - rsq)*(n -1)/ (n - k - 1));
+
+Output.SSE = SSresid;
+Output.rsq = rsq;
+Output.adj_rsq=adj_rsq;
 
 
 end
