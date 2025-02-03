@@ -91,7 +91,7 @@ SStotal = (length(data)-1) * var(data);
 rsq = 1 - SSresid/SStotal;
 
 k=3; %number of independent variables
-n=lenght(b); %number of datapoints
+n=length(b); %number of datapoints
 adj_rsq = 1- ((1 - rsq)*(n -1)/ (n - k - 1));
 
 Output.SSE = SSresid;
