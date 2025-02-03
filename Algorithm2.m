@@ -36,7 +36,7 @@ for slice_ct=11 %1:25
         Output.Dstar=fitmod_bi.Dstar;
         Output.f = fitmod_bi.f;
         Output.SSE = good_bi.sse;
-        Output.rsq = good_bi.rsq;
+        Output.rsq = good_bi.rsquare;
         Output.adj_rsq = good_bi.adjrsquare;
     catch
         Output.D=0;

@@ -122,7 +122,7 @@ IVIM2 = IVIM./IVIM(1)-((1-f0.f)*exp(-Bvalues.*f0.D));
      D_meas     = f0.D; 
      sse        = G1.sse;
      adj_rsq = G1.adjrsquare;
-     rsq = G1.rsq;
+     rsq = G1.rsquare;
      
      
 end

@@ -27,7 +27,7 @@ function Output = Algorithm3(bvalues,signal)
         Output.Dstar=fitmod_bi.Dstar;
         Output.f = fitmod_bi.f; % note that while this does give f0, it also returns an f (?) 
         Output.SSE = good_bi.sse;
-        Output.rsq = good_bi.rsq;
+        Output.rsq = good_bi.rsquare;
         Output.adj_rsq = good_bi.adjrsquare;
     catch
         Output.D=0;
