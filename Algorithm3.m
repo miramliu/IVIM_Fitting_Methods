@@ -12,7 +12,7 @@ function Output = Algorithm3(bvalues,signal)
 
     %generate D map
     %[mono_fitresult, gof] = fit(b_D',vec',ft_mono);
-    [mono_fitresult, ~] = fit(bvalues(b_split:N_bvalues),vec(b_split:N_bvalues),'ax+b');
+    [mono_fitresult, ~] = fit(bvalues(b_split:N_bvalues),vec(b_split:N_bvalues),'poly1');
     D_fit = -mono_fitresult.p1;
     f0_fit = 1-exp(mono_fitresult.p2);
 
