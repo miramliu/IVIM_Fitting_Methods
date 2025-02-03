@@ -22,15 +22,16 @@ for slice_ct=11 %1:25
 
     %generate D map
     %[mono_fitresult, gof] = fit(b_D',vec',ft_mono);
-    [mono_fitresult, ~] = fit(bvalues(b_split:N_bvalues),vec(b_split:N_bvalues),'ax+b');
+    [mono_fitresult, ~] = fit(bvalues(b_split:N_bvalues),vec(b_split:N_bvalues),'poly1');
     D_fit = -mono_fitresult.p1;
 
 
     %generate D* and f map
     ft_bi = fittype('(1-f)*exp(-x*D)+f*exp(-x*(Dstar))','dependent',{'y'},'independent',{'x'},'problem',{'D'},'coefficients',{'Dstar','f'});
-    fo_bi = [0.0004, 0.005, 0.07]; %startpoints, in alphabetical order, so D, Dstar, f. Check Algorithm 1 startpoint order!
+    fo_bi = [0.005, 0.07]; %startpoints, in alphabetical order, so D, Dstar, f. Check Algorithm 1 startpoint order!
+
     try
-        [fitmod_bi,good_bi,~]=fit(bvalues,signal(:)/signal(1),ft_bi,fo_bi, 'problem', D_fit); %no longer in log space
+        [fitmod_bi,good_bi,~]=fit(bvalues,signal(:)/signal(1),ft_bi,'startpoint',fo_bi, 'problem', D_fit); %no longer in log space
         Output.D=D_fit;
         Output.Dstar=fitmod_bi.Dstar;
         Output.f = fitmod_bi.f;
