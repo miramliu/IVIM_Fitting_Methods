@@ -90,7 +90,7 @@ MMSE.D = exp(sum(sum(sum(Post,1),3).*logD)/sP);
 %MMSE.Dva = exp(sum(sum(sum(Post,1),3).*(logD-MMSE.D).^2)/sP);
 MMSE.Ds = exp(sum(squeeze(sum(sum(Post,1),2)).*logDs')/sP);
 MMSE.f = sum(sum(sum(Post,2),3).*f')/sP;
-IVIM_data=[MMSE.D,MMSE.f, MMSE.Ds, ADC];
+
 % find MAP estimate (this will be close the the LS estimate)
 [~,I] = max(max(max(Post,[],3)));
 MAP.D = exp(logD(I));
@@ -110,6 +110,8 @@ yresid = data - curveFit1;
 SSresid = sum(yresid.^2);
 SStotal = (length(data)-1) * var(data);
 rsq = 1 - SSresid/SStotal;
+
+MMSE.Residual=rsq;
 
 if display==1
 %if 1 == 1; %hardcoding to show
