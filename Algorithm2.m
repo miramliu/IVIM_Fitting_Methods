@@ -13,9 +13,9 @@ for slice_ct=11 %1:25
                 end
 %}
     vec = log(signal/signal(1)); % ln(S/S0) normalize all signal
-    vec=vec(:); %force to be column vector
+    vec=double(vec(:)); %force to be column vector
   
-    bvalues = bvalues(:);
+    bvalues = double(bvalues(:));
     N_bvalues=length(bvalues);
     b_split = 6; %the threshold of bvalues where b>bvalue(blim) is slow only.
 
@@ -23,7 +23,7 @@ for slice_ct=11 %1:25
     %generate D map
     %[mono_fitresult, gof] = fit(b_D',vec',ft_mono);
     [mono_fitresult, ~] = fit(bvalues(b_split:N_bvalues),vec(b_split:N_bvalues),'poly1');
-    D_fit = -mono_fitresult.p1
+    D_fit = -mono_fitresult.p1;
 
 
     %generate D* and f map

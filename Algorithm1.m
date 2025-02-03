@@ -15,8 +15,8 @@ for i=1:nx
             Signal = double(ImageStack(1:N_Bvalues,i,j)); 
             %scatter(Bvalues, Signal/Signal(1))
 %}
-    Signal = Signal(:);
-    bvalues = bvalues(:);
+    Signal = double(Signal(:));
+    bvalues = double(bvalues(:));
     [f_meas, Dstar_meas, D_meas, Residual, ~]  = IVIM_UC_LM_Fit_2step(Signal,bvalues);
 
     Output.D=D_meas;

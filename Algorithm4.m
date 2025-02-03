@@ -75,19 +75,9 @@ sP = sum(Post(:));
 
 % compute MMSE estimates
 Output.D = exp(sum(sum(sum(Post,1),3).*logD)/sP);
-%MMSE.Dva = exp(sum(sum(sum(Post,1),3).*(logD-MMSE.D).^2)/sP);
 Output.Ds = exp(sum(squeeze(sum(sum(Post,1),2)).*logDs')/sP);
 Output.f = sum(sum(sum(Post,2),3).*f')/sP;
-%{
-%IVIM_data=[Output.D,Output.f, Output.Ds, ADC];
-% find MAP estimate (this will be close the the LS estimate)
-[~,I] = max(max(max(Post,[],3)));
-MAP.D = exp(logD(I));
-[~,I] = max(max(max(Post,[],2),[],1),[],3);
-MAP.Ds = exp(logDs(I));
-[~,I] = max(max(max(Post,[],2),[],3));
-MAP.f = f(I);
-%}
+
 
 % compute curve for MMSE estimate
 G = Output.f*exp(-b*Output.Ds) + (1-Output.f)*exp(-b*Output.D);
@@ -102,5 +92,6 @@ SStotal = (length(data)-1) * var(data);
 rsq = 1 - SSresid/SStotal;
 
 Output.Residual=rsq;
+
 
 end

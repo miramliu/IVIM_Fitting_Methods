@@ -3,9 +3,9 @@ function Output = Algorithm3(bvalues,signal)
 
 
     vec = log(signal/signal(1)); % ln(S/S0) normalize all signal
-    vec=vec(:); %force to be column vector
+    vec=double(vec(:)); %force to be column vector
   
-    bvalues = bvalues(:);
+    bvalues = double(bvalues(:));
     N_bvalues=length(bvalues);
     b_split = 6; %the threshold of bvalues where b>bvalue(blim) is slow only.
 
