@@ -7,7 +7,8 @@ signal = f*exp(-b.*Dstar) + (1-f)*exp(-b.*D)
 
 
 %test
-Algorithm1(b,signal)
-Algorithm2(b,signal)
-Algorithm3(b,signal)
-Algorithm4(b,signal)
+%Algorithm1(b,signal)
+%Algorithm2(b,signal)
+%Algorithm3(b,signal)
+%Algorithm4(b,signal)
+Algorithm7(b,signal)
