@@ -1,33 +1,26 @@
 %% algorithm 5 is similar to algorithm 2, and carries over f and D. only fits D* to the entire set of b-values
 %algorithm 5, segmented fit with f and D held, D* fit in the second run
 %but also forced D* upper bound (unlike algo5)
-function Output = Algorithm6(bvalues, signal)
+function Output = Algorithm6(bvalues, signal,bval_cutoff_idx)
 
-%{
-for slice_ct=11 %1:25
-        for i=1:max
-            for j=1:max
-                for c=1:5
-                    vec(c)=log(slice(i,j,c+5,slice_ct)/slice(i,j,b_0,slice_ct)); %ln(S/S0) from b=250-900
-                    if isnan(vec(c))||vec(c)==Inf||vec(c)==-Inf
-                        vec(c)=0;
-                    end
-                end
-%}
+
+    if ~exist('bval_cutoff_idx','var')
+         % third parameter does not exist, so default it to something
+          bval_cutoff_idx = 6;%the threshold of bvalues where b>bvalue(blim) is slow only.
+     end
     vec = log(signal/signal(1)); % ln(S/S0) normalize all signal
     vec=double(vec(:)); %force to be column vector
   
     bvalues = double(bvalues(:));
     N_bvalues=length(bvalues);
-    b_split = 6; %the threshold of bvalues where b>bvalue(blim) is slow only.
 
 
     %generate D map
-    %[mono_fitresult, gof] = fit(b_D',vec',ft_mono);
-    [mono_fitresult, ~] = fit(bvalues(b_split:N_bvalues),vec(b_split:N_bvalues),'poly1');
+    [mono_fitresult, ~] = fit(bvalues(bval_cutoff_idx:N_bvalues),vec(bval_cutoff_idx:N_bvalues),'poly1');
     
     D_fit = -mono_fitresult.p1;
     f_fit = 1-exp(mono_fitresult.p2); % as  ln(Ae^-bx) = ln(a) - bx.
+
 
 
     %generate D* and f map

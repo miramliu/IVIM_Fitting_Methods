@@ -26,7 +26,7 @@ for slice_ct=11 %1:25
     %generate D map
     %[mono_fitresult, gof] = fit(b_D',vec',ft_mono);
     fit_seg1 = fittype('(1-f)*exp(-x*D)','dependent',{'y'},'independent',{'x'});
-    [seg1fit,~]=fit(bvalues(b_split:N_bvalues),vec(b_split:N_bvalues), fit_seg1,'startpoint',[0.005,0]);
+    [seg1fit,~]=fit(bvalues(b_split:N_bvalues),vec(b_split:N_bvalues), fit_seg1,'startpoint',[0.005,0.2],'lower',[0,0],'upper',[0.1,1]);
     
     D_fit = seg1fit.D;
     f_fit = seg1fit.f; % as  ln(Ae^-bx) = ln(a) - bx.
