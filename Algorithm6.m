@@ -1,5 +1,5 @@
-%% algorithm 5 is similar to algorithm 2, and carries over f and D. only fits D* to the entire set of b-values
-%algorithm 5, segmented fit with f and D held, D* fit in the second run
+%% algorithm 6 is similar to algorithm 2, and carries over f and D. only fits D* to the entire set of b-values
+%algorithm 6, segmented fit with f and D held, D* fit in the second run
 %but also forced D* upper bound (unlike algo5)
 function Output = Algorithm6(bvalues, signal,bval_cutoff_idx)
 

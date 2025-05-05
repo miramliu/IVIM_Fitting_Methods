@@ -1,0 +1,21 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2709
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Algorithm 1 and Algorithm 4 had the lower percent difference for fD, both for fD* and (1-f)D\
+\
+Algorithm4 may actually be best? (Salman, maybe try running the canine data with the Bayesian??) \
+- it had a low fD* error, and the best correlation R2=0.81, without needing any thresholding\'85 \
+\
+But there are biases. \
+\
+Algorithm 2, 3, and 5 showed higher percent difference, even with thresholded by removing all D*<0.1\
+Algorithm 2 and 3 had 30% of the voxels with a non-physical value of D*>0.10 \
+- this may be due to the lower SNR of this run (the prior one, which saw similarly high D* values but in <10% of simulated voxels, had an SNR=100 compared to this run with SNR=50)\
+Their correlations were better\'85 \
+\
+\
+Algorithm 6, fixing f and D and then fixing D* upper bound, may be best }
