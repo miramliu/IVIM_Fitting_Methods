@@ -35,6 +35,19 @@ ALGORITHM 7
 - but also forced D* upper bound (unlike algo5)
 - and not in log space (unlike algo6)
 
+
+RunIVIM_Algos:
+- overall function that gets a stack of dicoms and processes it into a volume of IVIM parameters, and also creates a brain mask.
+- It saves both in the same folder as the dicoms
+- It does not perform any smoothing or averaging beyond averaging across different diffusion directions
+- Multiple the maps by the brain mask if you want them applied. 
+
+
+view3DVolume: 
+- view the resulting maps with slider on the bottom (slices), on the left (minimum contrast range) and on the right (maximum contrast range).
+- input the 3D volume of interest (e.g. squeeze(IVIM_maps(:,:,:,1)) to look at the 3D volume if IVIM f parameter. 
+
+
 AnomalousDiffusion_BiexponentialFitSimulation.ipynb
 Python 3.11 (Anaconda inc) code that generates anisotropic anomalous diffusion signal using simulated ellipsoids and the anomalous diffusion bi-exponential equation.
 
