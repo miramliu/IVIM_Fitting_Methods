@@ -40,7 +40,13 @@ RunIVIM_Algos:
 - overall function that gets a stack of dicoms and processes it into a volume of IVIM parameters, and also creates a brain mask.
 - It saves both in the same folder as the dicoms
 - It does not perform any smoothing or averaging beyond averaging across different diffusion directions
-- Multiple the maps by the brain mask if you want them applied. 
+- Multiple the maps by the brain mask if you want them applied.
+- To run: 
+>> dicom_path = path/to/dicom
+>> dicom = name_of_dicom
+>> IVIM_maps = RunIVIM_Algos(dicom_path, dicom)
+
+It should create a nx by ny by nz by 6 volume of images with 3D volumes for f, D, Dstar, SSE, rsq, and adj_rsq and it saves it in the same folder as the dicom.
 
 
 view3DVolume: 
