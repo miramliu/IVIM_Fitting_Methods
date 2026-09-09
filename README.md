@@ -23,6 +23,18 @@ ALGORITHM 4
 - minimum mean square error estimator as the mean of the posterior distribution
 
 
+ALGORITHM 5
+- segmented fit with f and D held, D* fit in the second run
+
+ALGORITHM 6
+- segmented fit with f and D held, D* fit in the second run
+- also forced D* upper bound (unlike algo5)
+
+ALGORITHM 7
+- segmented fit with f and D held, D* fit in the second run
+- but also forced D* upper bound (unlike algo5)
+- and not in log space (unlike algo6)
+
 AnomalousDiffusion_BiexponentialFitSimulation.ipynb
 Python 3.11 (Anaconda inc) code that generates anisotropic anomalous diffusion signal using simulated ellipsoids and the anomalous diffusion bi-exponential equation.
 
